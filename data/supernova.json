@@ -1,0 +1,13 @@
+{
+    "id": 104,
+    "name": "supernova",
+    "author": "fartman",
+    "verifier": "fartman",
+    "percentToQualify": 100,
+    "records": [
+        {
+            "user": "username",
+            "percent": 100,
+        }
+    ]
+}
