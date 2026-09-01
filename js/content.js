@@ -1,13 +1,15 @@
 import { round, score } from './score.js';
 
 const dir = 'data';
+
+export async function fetchList() {
     try {
-        const listResult = await fetch('/GDListTemplate/data/_list.json');
+        const listResult = await fetch(`${dir}/_list.json`);
         const list = await listResult.json();
         return await Promise.all(
             list.map(async (path, rank) => {
                 try {
-                    const levelResult = await fetch('/GDListTemplate/data/' + path + '.json');
+                    const levelResult = await fetch(`${dir}/${path}.json`);
                     const level = await levelResult.json();
                     return [
                         {
@@ -104,11 +106,10 @@ export async function fetchLeaderboard() {
 
 export async function fetchEditors() {
     try {
-        const editorsResults = await fetch('/GDListTemplate/data/_editors.json');
+        const editorsResults = await fetch(`${dir}/_editors.json`);
         const editors = await editorsResults.json();
         return editors;
     } catch {
         return null;
     }
 }
-
