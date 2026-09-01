@@ -35,73 +35,79 @@ export async function fetchList() {
 
 export async function fetchLeaderboard() {
     const list = await fetchList();
-    if (!list || list.length === 0) return [];
 
     const scoreMap = {};
-    let errCount = 0;
-
-    for (const [level, err] of list) {
+    const errs = [];
+    list.forEach(([level, err], rank) => {
         if (err) {
-            errCount++;
-            continue;
+            errs.push(err);
+            return;
         }
 
-        const rank = list.indexOf(list.find(([l]) => l && l.path === level.path)) + 1 - errCount;
-        const verifier = level.verifier;
+        // Verification
+        const verifier = Object.keys(scoreMap).find(
+            (u) => u.toLowerCase() === level.verifier.toLowerCase(),
+        ) || level.verifier;
+        scoreMap[verifier] ??= {
+            verified: [],
+            completed: [],
+            progressed: [],
+        };
+        const { verified } = scoreMap[verifier];
+        verified.push({
+            rank: rank + 1,
+            level: level.name,
+            score: score(rank + 1, 100, level.percentToQualify),
+            link: level.verification,
+        });
 
-        if (!(verifier in scoreMap)) {
-            scoreMap[verifier] = {
+        // Records
+        level.records.forEach((record) => {
+            const user = Object.keys(scoreMap).find(
+                (u) => u.toLowerCase() === record.user.toLowerCase(),
+            ) || record.user;
+            scoreMap[user] ??= {
                 verified: [],
                 completed: [],
                 progressed: [],
             };
-        }
-        scoreMap[verifier].verified.push(rank);
-
-        for (const record of level.records) {
-            const user = record.user;
-            if (!(user in scoreMap)) {
-                scoreMap[user] = {
-                    verified: [],
-                    completed: [],
-                    progressed: [],
-                };
-            }
-
+            const { completed, progressed } = scoreMap[user];
             if (record.percent === 100) {
-                scoreMap[user].completed.push(rank);
-            } else if (record.percent >= level.percentToQualify) {
-                scoreMap[user].progressed.push({
-                    rank,
-                    percent: record.percent,
+                completed.push({
+                    rank: rank + 1,
+                    level: level.name,
+                    score: score(rank + 1, 100, level.percentToQualify),
+                    link: record.link,
                 });
+                return;
             }
-        }
-    }
 
-    const leaderboard = [];
-    for (const user in scoreMap) {
-        let totalScore = 0;
-        for (const rank of scoreMap[user].verified) {
-            totalScore += score(rank, 100, list.length);
-        }
-        for (const rank of scoreMap[user].completed) {
-            totalScore += score(rank, 100, list.length);
-        }
-        for (const progress of scoreMap[user].progressed) {
-            totalScore += score(progress.rank, progress.percent, list.length);
-        }
-
-        if (totalScore > 0) {
-            leaderboard.push({
-                user,
-                score: round(totalScore),
-                ...scoreMap[user],
+            progressed.push({
+                rank: rank + 1,
+                level: level.name,
+                percent: record.percent,
+                score: score(rank + 1, record.percent, level.percentToQualify),
+                link: record.link,
             });
-        }
-    }
+        });
+    });
 
-    return leaderboard.sort((a, b) => b.score - a.score);
+    // Wrap in extra Object containing the user and total score
+    const res = Object.entries(scoreMap).map(([user, scores]) => {
+        const { verified, completed, progressed } = scores;
+        const total = [verified, completed, progressed]
+            .flat()
+            .reduce((prev, cur) => prev + cur.score, 0);
+
+        return {
+            user,
+            total: round(total),
+            ...scores,
+        };
+    });
+
+    // Sort by total score
+    return [res.sort((a, b) => b.total - a.total), errs];
 }
 
 export async function fetchEditors() {
