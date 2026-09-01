@@ -1,0 +1,13 @@
+{
+    "id": 102,
+    "name": "rainbow road",
+    "author": "fartman",
+    "verifier": "fartman",
+    "percentToQualify": 100,
+    "records": [
+        {
+            "user": "username",
+            "percent": 100,
+        }
+    ]
+}
