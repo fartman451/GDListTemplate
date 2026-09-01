@@ -33,6 +33,77 @@ export async function fetchList() {
     }
 }
 
+export async function fetchLeaderboard() {
+    const list = await fetchList();
+    if (!list) return null;
+
+    const scoreMap = {};
+    let errCount = 0;
+
+    for (const [level, err] of list) {
+        if (err) {
+            errCount++;
+            continue;
+        }
+
+        const rank = list.indexOf(list.find(([l]) => l && l.path === level.path)) + 1 - errCount;
+        const verifier = level.verifier;
+
+        if (!(verifier in scoreMap)) {
+            scoreMap[verifier] = {
+                verified: [],
+                completed: [],
+                progressed: [],
+            };
+        }
+        scoreMap[verifier].verified.push(rank);
+
+        for (const record of level.records) {
+            const user = record.user;
+            if (!(user in scoreMap)) {
+                scoreMap[user] = {
+                    verified: [],
+                    completed: [],
+                    progressed: [],
+                };
+            }
+
+            if (record.percent === 100) {
+                scoreMap[user].completed.push(rank);
+            } else if (record.percent >= level.percentToQualify) {
+                scoreMap[user].progressed.push({
+                    rank,
+                    percent: record.percent,
+                });
+            }
+        }
+    }
+
+    const leaderboard = [];
+    for (const user in scoreMap) {
+        let totalScore = 0;
+        for (const rank of scoreMap[user].verified) {
+            totalScore += score(rank, 100, list.length);
+        }
+        for (const rank of scoreMap[user].completed) {
+            totalScore += score(rank, 100, list.length);
+        }
+        for (const progress of scoreMap[user].progressed) {
+            totalScore += score(progress.rank, progress.percent, list.length);
+        }
+
+        if (totalScore > 0) {
+            leaderboard.push({
+                user,
+                score: round(totalScore),
+                ...scoreMap[user],
+            });
+        }
+    }
+
+    return leaderboard.sort((a, b) => b.score - a.score);
+}
+
 export async function fetchEditors() {
     try {
         const editorsResults = await fetch('/GDListTemplate/data/_editors.json');
