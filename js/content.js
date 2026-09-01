@@ -1,6 +1,6 @@
 import { round, score } from './score.js';
 
-const dir = '/GDListTemplate/data';
+const dir = '/GDListTemplate';
 
 export async function fetchList() {
     const listResult = await fetch('/GDListTemplate/data/_list.json');
