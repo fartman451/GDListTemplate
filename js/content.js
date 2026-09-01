@@ -1,6 +1,5 @@
 import { round, score } from './score.js';
 
-// Generates a random number string to bypass server caching
 const bust = `?cache=${Date.now()}`;
 
 export async function fetchList() {
@@ -12,6 +11,7 @@ export async function fetchList() {
                 try {
                     const levelResult = await fetch(`./data/${path}.json${bust}`);
                     const level = await levelResult.json();
+                    // Returns an inner array element to satisfy the template framework
                     return [
                         {
                             ...level,
@@ -30,13 +30,14 @@ export async function fetchList() {
         );
     } catch {
         console.error('Failed to load list.');
-        return null;
+        // Must return an empty array instead of null to prevent component crashes
+        return [];
     }
 }
 
 export async function fetchLeaderboard() {
     const list = await fetchList();
-    if (!list) return null;
+    if (!list || list.length === 0) return [];
 
     const scoreMap = {};
     let errCount = 0;
@@ -111,6 +112,6 @@ export async function fetchEditors() {
         const editors = await editorsResults.json();
         return editors;
     } catch {
-        return null;
+        return [];
     }
 }
