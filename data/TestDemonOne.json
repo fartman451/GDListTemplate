@@ -1,9 +1,15 @@
 {
     "id": 1,
     "name": "TestDemonOne",
-    "author": "Creator",
-    "verifier": "Verifier",
+    "author": "CreatorName",
+    "verifier": "VerifierName",
     "verification": "https://youtube.com",
     "percentToQualify": 100,
-    "records":
+    "records": [
+        {
+            "user": "FirstVictor",
+            "percent": 100,
+            "link": "https://youtube.com"
+        }
+    ]
 }
