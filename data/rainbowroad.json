@@ -1,0 +1,18 @@
+{
+    "id": 102,
+    "name": "rainbow road",
+    "author": "Fartman",
+    "creators": ["Fartman"],
+    "verifier": "fartman",
+    "verification": "https://youtu.be/Nzx9z78_Uek?si=n7kelwpZVRuoM7hZ",
+    "percentToQualify": 100,
+    "password": "Free to Copy",
+    "records": [
+        {
+            "user": "username",
+            "link": "https://youtu.be/dQw4w9WgXcQ?si=joCJEHwn52KgAHu0",
+            "percent": 100,
+            "hz": 360
+        }
+    ]
+}
