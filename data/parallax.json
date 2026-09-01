@@ -1,0 +1,13 @@
+{
+    "id": 110,
+    "name": "parallax",
+    "author": "fartman",
+    "verifier": "fartman",
+    "percentToQualify": 100,
+    "records": [
+        {
+            "user": "username",
+            "percent": 100,
+        }
+    ]
+}
