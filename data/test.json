@@ -1,0 +1,9 @@
+{
+    "id": 1,
+    "name": "test",
+    "author": "Fartman",
+    "verifier": "Fartman",
+    "verification": "https://youtube.com",
+    "percentToQualify": 100,
+    "records": []
+}
