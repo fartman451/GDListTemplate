@@ -1,9 +1,0 @@
-{
-    "id": 2,
-    "name": "TestDemonTwo",
-    "author": "Creator",
-    "verifier": "Verifier",
-    "verification": "https://youtube.com",
-    "percentToQualify": 100,
-    "records": []
-}
