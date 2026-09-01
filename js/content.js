@@ -1,6 +1,8 @@
 import { round, score } from './score.js';
 
-const dir = 'data';
+// Dynamically calculates the absolute root URL path of your specific repository
+const repoName = window.location.pathname.split('/')[1];
+const dir = `${window.location.origin}/${repoName}/data`;
 
 export async function fetchList() {
     try {
