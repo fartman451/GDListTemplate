@@ -2,8 +2,9 @@
     "id": 1,
     "name": "test",
     "author": "Fartman",
+    "creators": ["fartman"]
     "verifier": "Fartman",
-    "verification": "https://youtube.com",
+    "verification": "https://youtube.com/watch?v=dQw4w9WgXcQ",
     "percentToQualify": 100,
     "records": []
 }
