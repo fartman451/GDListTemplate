@@ -1,1 +1,12 @@
-
+{
+    "id": 118,
+    "name": "the curry incident",
+    "author": "Fartman",
+    "creators": ["Fartman"],
+    "verifier": "fartman",
+    "verification": "https://youtu.be/xMYVDXHfihk?si=v2wFz_k5r04LYLq0",
+    "percentToQualify": 80,
+    "password": "Free to Copy",
+    "records": [
+    ]
+}
